@@ -1,5 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const exerciseController = require('../controllers/exercises');
+const exerciseController = require("../controllers/exercises");
 
-router.get('/', exerciseController.getAllExercises);
+router.get("/", exerciseController.getAllExercises);
+module.exports = router;
