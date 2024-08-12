@@ -18,6 +18,7 @@ module.exports = new Sequelize(
   process.env.POSTGRES_PASSWORD,
   {
     host: process.env.DATABASE_URL,
+    port:process.env.POSTGRES_PORT,
     dialect: "postgres",
   }
 );
