@@ -3,8 +3,6 @@ const app = express();
 const db = require("./config/database");
 const exercisesRoutes = require("./routes/exercises");
 
-require("dotenv").config();
-
 db.authenticate()
   .then(() => console.log("Database connected"))
   .catch((err) => console.error("Error connecting to database:", err));
