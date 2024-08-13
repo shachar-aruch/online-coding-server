@@ -13,12 +13,12 @@ db.authenticate()
 
 const io = new Server(http, {
   cors: {
-    origin: "https://magical-donut-f4ea36.netlify.app/",
+    origin: "https://magical-donut-f4ea36.netlify.app",
   },
 });
 
 app.use(cors({
-  origin: "https://magical-donut-f4ea36.netlify.app/"
+  origin: "https://magical-donut-f4ea36.netlify.app"
 }));
 app.use(express.json());
 
