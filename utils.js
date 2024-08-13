@@ -15,7 +15,7 @@ exports.userJoinedRoom = (roomId, socket) => {
     rooms[roomId].forEach((user) => {
       user.socket.emit("amount changed", { amount: rooms[roomId].length });
     });
-    
+
     if (roomsOutput[roomId]) {
       socket.emit("code change", { value: roomsOutput[roomId] });
     }
@@ -24,19 +24,19 @@ exports.userJoinedRoom = (roomId, socket) => {
 
 exports.removeUserFromRoom = (socket) => {
   Object.keys(rooms).forEach((roomId) => {
-    const user = rooms[roomId].find((user) => user.socket.id === socket.id);
+    const user = rooms[roomId]?.find((user) => user.socket.id === socket.id);
     if (user) {
       if (user.role === "teacher") {
-        rooms[roomId].forEach((user) => {
+        rooms[roomId]?.forEach((user) => {
           user.socket.emit("teacher left");
         });
         delete rooms[roomId];
         delete roomsOutput[roomId];
       } else {
-        rooms[roomId] = rooms[roomId].filter(
+        rooms[roomId] = rooms[roomId]?.filter(
           (user) => user.socket.id !== socket.id
         );
-        rooms[roomId].forEach((user) => {
+        rooms[roomId]?.forEach((user) => {
           user.socket.emit("amount changed", { amount: rooms[roomId].length });
         });
       }
@@ -45,7 +45,7 @@ exports.removeUserFromRoom = (socket) => {
 };
 
 exports.codeChanged = (roomId, value, socket) => {
-  rooms[roomId].forEach((user) => {
+  rooms[roomId]?.forEach((user) => {
     if (user.socket.id !== socket.id) {
       user.socket.emit("code change", { value });
     }
