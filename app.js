@@ -5,7 +5,12 @@ const exercisesRoutes = require("./routes/exercises");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const http = require("http").Server(app);
-const { userJoinedRoom, removeUserFromRoom, codeChanged } = require("./utils");
+const {
+  userJoinedRoom,
+  removeUserFromRoom,
+  codeChanged,
+  chooseStudent,
+} = require("./utils");
 
 db.authenticate()
   .then(() => console.log("Database connected"))
@@ -43,6 +48,11 @@ io.on("connection", (socket) => {
   socket.on("code change", ({ roomId, value }) => {
     console.log("code change event received");
     codeChanged(roomId, value, socket);
+  });
+
+  socket.on("choose student", ({ roomId }) => {
+    console.log("role change event received");
+    chooseStudent(roomId, socket);
   });
 });
 

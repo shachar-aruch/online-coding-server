@@ -2,11 +2,15 @@ const rooms = {};
 const roomsOutput = {};
 
 exports.userJoinedRoom = (roomId, socket) => {
-  let role = "student";
+  let role = "viewer";
 
   if (!rooms[roomId]) {
     rooms[roomId] = [];
     role = "teacher";
+  }
+
+  if (rooms[roomId].length == 1) {
+    role = "student";
   }
 
   if (!rooms[roomId].some((user) => user.socket.id === socket.id)) {
@@ -36,6 +40,15 @@ exports.removeUserFromRoom = (socket) => {
         rooms[roomId] = rooms[roomId]?.filter(
           (user) => user.socket.id !== socket.id
         );
+        if (rooms[roomId].length >= 2 && user.role === "student") {
+          const lastViewer = rooms[roomId].find(
+            (user) => user.role === "viewer"
+          );
+          if (lastViewer) {
+            lastViewer.role = "student";
+            lastViewer.socket.emit("role changed", { role: "student" });
+          }
+        }
         rooms[roomId]?.forEach((user) => {
           user.socket.emit("amount changed", { amount: rooms[roomId].length });
         });
@@ -52,4 +65,16 @@ exports.codeChanged = (roomId, value, socket) => {
   });
 
   roomsOutput[roomId] = value;
+};
+
+exports.chooseStudent = (roomId, socket) => {
+  rooms[roomId]?.forEach((user) => {
+    if (user.socket.id === socket.id) {
+      user.role = "student";
+      user.socket.emit("role changed", { role: "student" });
+    } else if (user.role === "student") {
+      user.role = "viewer";
+      user.socket.emit("role changed", { role: "viewer" });
+    }
+  });
 };
